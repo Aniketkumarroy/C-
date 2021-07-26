@@ -1,4 +1,5 @@
-//C++ program to convert a matrix into echolon form by showing details operation steps 
+//C++ program to convert a matrix into echolon form by showing details operation steps
+//rational numbers in echelon form are shown in p/q format
 #include<bits/stdc++.h>
 using namespace std;
 int main()
