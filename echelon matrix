@@ -1,0 +1,72 @@
+//C++ program to convert a matrix into echolon form by showing details operation steps 
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    system("cls");
+    float N[20][20],D[20][20];
+    int i,j,m,n,c=0,I,HCF(int,int),show(float[][20],float[][20],int,int),Rowoperation(int,int,int,float[][20],float[][20]);
+    (cout<<"Enter the order of matrix(mxn):",cin>>m>>n);
+    cout<<"Enter the matrix:\n";
+    for(i=0;i<m;i++)
+    for(j=0;j<n;j++)
+    (cin>>N[i][j],D[i][j]=1);
+    show(N,D,m,n);
+    for(I=0;I<m-1;I++)
+    {
+        if(!N[I][I]&&I<m-1)
+        {
+            i=I;
+            while(!N[I][I]&&++i<m)
+            if(N[i][I])
+            {
+                cout<<"R"<<I+1<<" <=> "<<"R"<<i+1<<"\n";    
+                for(j=I;j<n;j++)
+                (c=N[I][j],N[I][j]=N[i][j],N[i][j]=c,c=D[I][j],D[I][j]=D[i][j],D[i][j]=c);
+                show(N,D,m,n);
+            }      
+        }
+        for(i=I+1,c=0;i<m;i++)
+        Rowoperation(i,I,n,N,D);
+        show(N,D,m,n);
+    }
+    cout<<"\nprogram finished";
+}
+int HCF(int x,int y)
+{
+    int r1,r=min(fabs(x),fabs(y)),d=max(fabs(x),fabs(y));
+    while(r)
+    (r1=d%r,d=r,r=r1);
+    return ((x>0&&y<0)||(x<0&&y<0))?(-1*d):d;
+}
+int show(float N[][20],float D[][20],int m,int n)
+{
+    int i,j;
+    for(i=0;i<m;i++)
+    {
+        cout<<"|";
+        for(j=0;j<n;j++)
+        if(D[i][j]&&(!N[i][j]||!fmod(N[i][j],D[i][j])))
+        cout<<setw(9)<<N[i][j]/D[i][j];
+        else
+        cout<<setw(8)<<N[i][j]<<"/"<<D[i][j];
+        cout<<"|\n";
+    }
+}
+int Rowoperation(int i,int I,int n,float N[][20],float D[][20])
+{
+    int j,p,q,L,H;
+    if(N[i][I])
+    {
+        (p=N[i][I]*D[I][I],q=D[i][I]*N[I][I]);
+        (H=HCF(p,q),p=p/H,q=q/H);
+        cout<<"R"<<i+1<<" => R"<<i+1<<" - ("<<p<<"/"<<q<<")R"<<I+1<<"\n";
+        for(j=I;j<n;j++)
+        {
+            L=fabs(D[i][j])*fabs(D[I][j]*q)/HCF(D[i][j],D[I][j]*q);
+            N[i][j]=((L/D[i][j])*N[i][j])-((L/(D[I][j]*q))*N[I][j]*p);
+            H=HCF(N[i][j],L);
+            (N[i][j]=N[i][j]/(H!=0?H:1),D[i][j]=L/(H!=0?H:1));
+        }   
+    }
+}
