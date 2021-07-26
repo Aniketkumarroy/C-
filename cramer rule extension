@@ -1,0 +1,72 @@
+//c++ program to find solutions of simultaneous linear equations
+//it can solve for n+1 variables by taking coefficients of n simultaneous equations,and will show the proportionality relationship between this n+1 variables
+//after showing proportionality relationship,it will ask for a integer value,0 will end the program and any non-zero value will assume last variable to be
+//1 and finding values of other variables by proportionality relationship
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int i,j,J,k,n,HCF(int,int);
+    float X[20][21],Y[20][20],Z[21],determinant(float (*)[20],int);
+    cout<<"Enter the no. of equations:";
+    cin>>n;
+    cout<<"Enter the coefficient matrix(IN LINEAR EQUATION FORMAT!!!):\n";
+    for(i=0;i<n;i++)
+    for(j=0;j<=n;j++)
+    cin>>X[i][j];
+    for(J=0;J<=n;J++)
+    {
+        for(i=0;i<n;i++)
+        for(j=0,k=0;j<=n;j++)
+        if(j!=J)
+        Y[i][k++]=X[i][j];
+        Z[J]=pow(-1,J)*determinant(Y,n);
+        cout<<"X"<<J+1<<"/"<<Z[J];
+        if(J!=n)
+        cout<<" = ";
+        else
+        (cout<<"\n",cin>>i);
+    }
+    if(i)
+    {
+        cout<<"Taking X"<<n+1<<" = 1";
+        for(J=0;J<n;J++)
+        {
+            if(floor(Z[J])==Z[J]&&floor(Z[n])==Z[n])
+            {
+                j=HCF(Z[J],Z[n]);
+                if(Z[n]&&(!Z[J]||!fmod(Z[J],Z[n])))
+                cout<<"\nX"<<J+1<<" = "<<Z[J]/Z[n];
+                else
+                cout<<"\nX"<<J+1<<" = "<<Z[J]/(j!=0?j:1)<<"/"<<Z[n]/(j!=0?j:1);
+            }    
+            else
+            cout<<"\nX"<<J+1<<" = "<<Z[J]<<"/"<<Z[n];
+        }
+    }
+    cout<<"\nprogram finished";
+}
+float determinant(float x[][20],int y)
+{
+    int i,j,k,J;
+    float b[20][20],s=0;
+    if(y==1)
+    s=x[0][0];
+    else
+    for(J=0;J<y;J++)
+    {
+        for(i=1;i<y;i++)
+        for(j=0,k=0;j<y;j++)
+        if(j!=J)
+        b[i-1][k++]=x[i][j];
+        s+=pow(-1,J)*x[0][J]*(x[0][J]==0?0:determinant(b,y-1));
+    }
+    return s;
+}
+int HCF(int x,int y)
+{
+    int r1,r=min(fabs(x),fabs(y)),d=max(fabs(x),fabs(y));
+    while(r)
+    (r1=d%r,d=r,r=r1);
+    return ((x>0&&y<0)||(x<0&&y<0))?(-1*d):d;
+}
