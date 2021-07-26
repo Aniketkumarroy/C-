@@ -1,0 +1,73 @@
+//program to find Inverse,determinant and adjoint of a input matrix
+//in Inverse matrix rational numbers are shown in p/q format
+#include<bits/stdc++.h>
+using namespace std;
+int HCF(int x,int y)
+{
+    int r1,r=min(fabs(x),fabs(y)),d=max(fabs(x),fabs(y));
+    while(r)
+    (r1=d%r,d=r,r=r1);
+    return ((x>0&&y<0)||(x<0&&y<0))?(-1*d):d;
+}
+float determinant(float x[][20],int y)
+{
+    int i,j,k,J;
+    float b[20][20],s=0;
+    if(y==1)
+    s=x[0][0];
+    else
+    for(J=0;J<y;J++)
+    {
+        for(i=1;i<y;i++)
+        for(j=0,k=0;j<y;j++)
+        if(j!=J)
+        b[i-1][k++]=x[i][j];
+        s+=pow(-1,J)*x[0][J]*(x[0][J]==0?0:determinant(b,y-1));
+    }
+    return s;
+}
+int main()
+{
+    system("cls");
+    int i,j,n,I,J,k,l;
+    float d,A[20][20],b[19][20],Inv[20][20];
+    cout<<"enter the order of matrix(n):";
+    cin>>n;
+    cout<<"enter the matrix:\n";
+    for(i=0;i<n;i++)
+    for(j=0;j<n;j++)
+    cin>>A[i][j];
+    d=determinant(A,n);
+    (d)?(cout<<setw(15)<<"1\n"<<"A(inverse)= --- adj(A)\n"<<setw(16)<<"|A|\n"):(cout<<"this is a singular matrix\n");
+    cout<<"determinant of A:|A|="<<d<<"\n";
+    cout<<"Adjoint of A:adj(A)=\n";
+    for(J=0;J<n;J++)
+    {
+        cout<<"|";
+        for(I=0;I<n;I++)
+        {
+            for(i=0,k=0;i<n;i++)
+            if(i!=I)
+            {  
+                for(j=0,l=0;j<n;j++)
+                if(j!=J)
+                b[k][l++]=A[i][j];
+                k++;
+            }
+            (Inv[J][I]=pow(-1,I+J)*determinant(b,n-1),cout<<setw(6)<<Inv[J][I]);
+        }
+        cout<<"|\n";
+    }
+    if(d)
+    {
+        cout<<"Inverse matrix is:-----\n";
+        for(i=0;i<n;i++)
+        {
+            cout<<"|";
+            for(j=0;j<n;j++)
+            (fmod(Inv[i][j],d))?(cout<<setw(6)<<Inv[i][j]/HCF(Inv[i][j],d)<<"/"<<d/HCF(Inv[i][j],d)):(cout<<setw(6)<<Inv[i][j]/d);
+            cout<<"|\n";
+        }
+    }
+    cout<<"\nprogram finished";
+}
