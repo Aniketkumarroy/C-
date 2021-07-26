@@ -1,0 +1,71 @@
+//it takes a augmented matrix and and carry out the gauss sieden iteration to find approximate value of variables
+//iteration number is user dependent,i.e. after every nth iteration it will ask for integer input,0 will end the program and any non-zero value will make one more iteration
+//show every iteration with detailed stepwise calculation
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    system("cls");
+    float m,a[50][51],b[50],s=0;//what is need of initializing s???.......
+    int i,j,n,c=0;
+    cout<<"Enter no of equations:";
+    cin>>n;
+    cout<<"Enter the augmented matrix:\n";
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<=n;j++)
+        {
+            cin>>a[i][j];
+            if(j==i)
+            {
+                while(j>=0&&!m)
+                m=fabs(a[i][i])<fabs(a[i][j--])?a[i][j+1]:0;
+                j=i;
+            }       
+            if(j>i&&j!=n&&fabs(a[i][j])>fabs(a[i][i]))
+            break; 
+        }
+        if(m||(j!=n&&a[i][j]))
+        {
+            m=m!=0?m:a[i][j];
+            cout<<"iteration not possible as absolute value of "<<m<<" is more than absolute value of "<<a[i][i];
+            break;
+        }
+    }
+    if(!m)
+    {
+        cout<<"\nEnter the initial guesses:\n";
+        for(i=0;i<n;i++)
+        cin>>b[i];
+        do
+        {
+            cout<<"iteration "<<++c<<"\n"<<"----------\n";
+            for(i=0;i<n;i++)
+            {
+                m=a[i][n];
+                cout<<"(X"<<i+1<<")("<<a[i][i]<<")="<<a[i][n];
+                for(j=0;j<n;j++)
+                if(j!=i)
+                cout<<"+(X"<<j+1<<")("<<(-1)*a[i][j]<<")";
+                cout<<"\n(X"<<i+1<<")("<<a[i][i]<<")="<<a[i][n];
+                for(j=0;j<n;j++)
+                if(j!=i)
+                cout<<"+("<<b[j]<<")("<<(-1)*a[i][j]<<")";
+                cout<<"\n(X"<<i+1<<")("<<a[i][i]<<")="<<a[i][n];
+                for(j=0;j<n;j++)
+                if(j!=i)
+                cout<<"+("<<b[j]*(-1)*a[i][j]<<")";
+                cout<<"\n(X"<<i+1<<")("<<a[i][i]<<")=";
+                for(j=0;j<n;j++)
+                m+=(j!=i)*(b[j]*(-1)*a[i][j]);
+                cout<<m<<"\nX"<<i+1<<"="<<m/a[i][i];
+                b[i]=m/a[i][i];
+                cout<<"\n";
+                
+            }
+            cout<<"---------------\n";
+            cin>>m;
+        }while(m);
+    }
+    cout<<"\nprogram finished";
+}
